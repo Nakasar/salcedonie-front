@@ -5,6 +5,8 @@ import Hidden from "@material-ui/core/Hidden";
 import Drawer from "@material-ui/core/Drawer";
 import { withStyles } from '@material-ui/core/styles';
 
+import withAuthContext from './Contexts/Auth/withAuthContext.context';
+
 import AppBar from './Components/AppBar.component';
 import SideMenu from "./Components/SideMenu.component";
 
@@ -43,7 +45,13 @@ class App extends Component {
   };
 
   render() {
-    const { classes, theme } = this.props;
+    const { classes, theme, authContext } = this.props;
+
+    if (!authContext.user) {
+      return (
+        <h1>Vous devez être connecté</h1>
+      );
+    }
 
     return (
       <div className={classes.root}>
@@ -114,4 +122,4 @@ class App extends Component {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(App);
+export default withAuthContext(withStyles(styles, { withTheme: true })(App));
