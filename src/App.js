@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import Hidden from "@material-ui/core/Hidden";
 import Drawer from "@material-ui/core/Drawer";
@@ -23,6 +23,11 @@ const styles = theme => ({
   drawerPaper: {
     width: drawerWidth,
   },
+  toolbar: theme.mixins.toolbar,
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing.unit * 3,
+  },
 });
 
 class App extends Component {
@@ -42,35 +47,68 @@ class App extends Component {
 
     return (
       <div className={classes.root}>
-        <AppBar title="Salcedonie" handleDrawerToggle={this.handleDrawerToggle} />
-        <nav className={classes.drawer}>
-          {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-          <Hidden smUp implementation="css">
-            <Drawer
-              container={this.props.container}
-              variant="temporary"
-              anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-              open={this.state.mobileOpen}
-              onClose={this.handleDrawerToggle}
-              classes={{
-                paper: classes.drawerPaper,
-              }}
-            >
-              <SideMenu/>
-            </Drawer>
-          </Hidden>
-          <Hidden xsDown implementation="css">
-            <Drawer
-              classes={{
-                paper: classes.drawerPaper,
-              }}
-              variant="permanent"
-              open
-            >
-              <SideMenu/>
-            </Drawer>
-          </Hidden>
-        </nav>
+        <Router>
+          <>
+            <AppBar title="Salcedonie" handleDrawerToggle={this.handleDrawerToggle} />
+            <nav className={classes.drawer}>
+              {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+              <Hidden smUp implementation="css">
+                <Drawer
+                  container={this.props.container}
+                  variant="temporary"
+                  anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+                  open={this.state.mobileOpen}
+                  onClose={this.handleDrawerToggle}
+                  classes={{
+                    paper: classes.drawerPaper,
+                  }}
+                >
+                  <SideMenu/>
+                </Drawer>
+              </Hidden>
+              <Hidden xsDown implementation="css">
+                <Drawer
+                  classes={{
+                    paper: classes.drawerPaper,
+                  }}
+                  variant="permanent"
+                  open
+                >
+                  <SideMenu/>
+                </Drawer>
+              </Hidden>
+            </nav>
+
+            <main className={classes.content}>
+              <div className={classes.toolbar} />
+              <Switch>
+                <Route path='/' exact>
+                  <h1>Accueil</h1>
+                </Route>
+
+                <Route path='/general'>
+                  <h1>Vue générale</h1>
+                </Route>
+
+                <Route path='/events/'>
+                  <h1>Events</h1>
+                </Route>
+
+                <Route path='/personnages/'>
+                  <h1>Personnages</h1>
+                </Route>
+
+                <Route path='/lieux/'>
+                  <h1>Lieux</h1>
+                </Route>
+
+                <Route path='/compte/'>
+                  <h1>Mon Compte</h1>
+                </Route>
+              </Switch>
+            </main>
+          </>
+        </Router>
       </div>
     );
   }

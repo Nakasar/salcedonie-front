@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import Divider from "@material-ui/core/Divider";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -10,47 +11,62 @@ import { AccountCircle, Announcement, Event, Home, Store, SupervisorAccount } fr
 
 const styles = theme => ({
   toolbar: theme.mixins.toolbar,
+  link: {
+    textDecoration: 'none',
+  }
 });
 
 class SideMenu extends Component {
   render() {
-    const { classes, theme } = this.props;
+    const { classes } = this.props;
 
     return (
       <>
         <div className={classes.toolbar} />
         <Divider />
         <List>
-          <ListItem button key='Accueil'>
-            <ListItemIcon><Home /></ListItemIcon>
-            <ListItemText primary='Accueil' />
-          </ListItem>
-          <ListItem button key='Résumé'>
-            <ListItemIcon><Announcement /></ListItemIcon>
-            <ListItemText primary='Résumé' />
-          </ListItem>
+          <Link to='/' className={classes.link}>
+            <ListItem button key='Accueil'>
+              <ListItemIcon><Home /></ListItemIcon>
+              <ListItemText primary='Accueil' />
+            </ListItem>
+          </Link>
+          <Link to='/general' className={classes.link}>
+            <ListItem button key='Résumé'>
+              <ListItemIcon><Announcement /></ListItemIcon>
+              <ListItemText primary='Résumé' />
+            </ListItem>
+          </Link>
         </List>
         <Divider />
         <List>
-          <ListItem button key='Events'>
-            <ListItemIcon><Event /></ListItemIcon>
-            <ListItemText primary='Events' />
-          </ListItem>
-          <ListItem button key='Personnages'>
-            <ListItemIcon><SupervisorAccount /></ListItemIcon>
-            <ListItemText primary='Personnages' />
-          </ListItem>
-          <ListItem button key='Lieux'>
-            <ListItemIcon><Store /></ListItemIcon>
-            <ListItemText primary='Lieux' />
-          </ListItem>
+          <Link to='/events' className={classes.link}>
+            <ListItem button key='Events'>
+              <ListItemIcon><Event /></ListItemIcon>
+              <ListItemText primary='Events' />
+            </ListItem>
+          </Link>
+          <Link to='/personnages' className={classes.link}>
+            <ListItem button key='Personnages'>
+              <ListItemIcon><SupervisorAccount /></ListItemIcon>
+              <ListItemText primary='Personnages' />
+            </ListItem>
+          </Link>
+          <Link to='/lieux' className={classes.link}>
+            <ListItem button key='Lieux'>
+              <ListItemIcon><Store /></ListItemIcon>
+              <ListItemText primary='Lieux' />
+            </ListItem>
+          </Link>
         </List>
         <Divider />
         <List>
-          <ListItem button key='Mon Compte'>
-            <ListItemIcon><AccountCircle /></ListItemIcon>
-            <ListItemText primary='Mon Compte' />
-          </ListItem>
+          <Link to='/compte' className={classes.link}>
+            <ListItem button key='Mon Compte'>
+              <ListItemIcon><AccountCircle /></ListItemIcon>
+              <ListItemText primary='Mon Compte' />
+            </ListItem>
+          </Link>
         </List>
       </>
     );
