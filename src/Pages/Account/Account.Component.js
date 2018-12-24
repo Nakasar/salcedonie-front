@@ -68,11 +68,13 @@ class AccountComponent extends Component {
               InputLabelProps={{
                 shrink: true,
               }}
+              autoComplete="off"
               margin="normal"
               variant="outlined"
             />
             <TextField
-              id="username"
+              id="discord_id"
+              autoComplete="off"
               label="Numéro de compte discord"
               value={discord_id}
               onChange={this.handleChange('discord_id')}
