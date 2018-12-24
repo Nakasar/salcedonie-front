@@ -31,14 +31,19 @@ class AdminComponent extends Component {
   };
 
   async componentDidMount() {
+    await this.refreshUserList();
+  }
+
+  refreshUserList = async () => {
     const { authContext: { user }, userStore } = this.props;
+
     const users = await userStore.getUsers({}, { token: user.token });
 
     this.setState({
       loading: false,
       users,
     });
-  }
+  };
 
   handleOpenAddUserDialog = () => {
     this.setState({ addUserDialog: true });
@@ -52,6 +57,8 @@ class AdminComponent extends Component {
     const { userStore, authContext: { user } } = this.props;
 
     await userStore.createUser({ username, discord_id, password }, { token: user.token });
+
+    await this.refreshUserList();
   };
 
   render() {
