@@ -45,12 +45,14 @@ class SideMenu extends Component {
               <ListItemText primary='Règles' />
             </ListItem>
           </Link>
-          <Link to='/regles' className={classes.link}>
-            <ListItem button key='Administration'>
-              <ListItemIcon><Settings /></ListItemIcon>
-              <ListItemText primary='Administration' />
-            </ListItem>
-          </Link>
+          {authContext.user.data.is_admin &&
+            <Link to='/admin' className={classes.link}>
+              <ListItem button key='Administration'>
+                <ListItemIcon><Settings/></ListItemIcon>
+                <ListItemText primary='Administration'/>
+              </ListItem>
+            </Link>
+          }
         </List>
         <Divider />
         <List>

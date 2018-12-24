@@ -1,8 +1,17 @@
 const axios = require('axios');
 
-export default class Store {
+export default class AuthStore {
+    constructor({ apiUrl }) {
+        this.apiUrl = apiUrl;
+    }
+
     signIn = async ({ username, password }) => {
-        const result = await axios.post('http://localhost:5000/auth', { username, password });
+        const result = await axios({
+            method: 'POST',
+            baseURL: this.apiUrl,
+            url: '/auth',
+            data: { username, password }
+        });
         return result.data;
     };
 };

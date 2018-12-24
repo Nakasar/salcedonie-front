@@ -10,10 +10,13 @@ import withAuthContext from './Contexts/Auth/withAuthContext.context';
 import AppBar from './Components/AppBar.component';
 import SideMenu from "./Components/SideMenu.component";
 import LoginComponent from "./Components/Login.component";
+import AccountComponent from './Pages/Account/Account.Component';
 
 import AuthStore from './Stores/Auth.store';
+import UserStore from './Stores/User.Store';
 
 const drawerWidth = 240;
+const API_URL = 'http://localhost:5000';
 
 const styles = theme => ({
   root: {
@@ -36,7 +39,8 @@ const styles = theme => ({
 });
 
 class App extends Component {
-  authStore = new AuthStore();
+  authStore = new AuthStore({ apiUrl: API_URL });
+  userStore = new UserStore({ apiUrl: API_URL });
 
   constructor(props) {
     super(props);
@@ -54,7 +58,7 @@ class App extends Component {
       const token = localStorage.getItem('token');
 
       if (username && token) {
-        const data = atob(token.split('.')[1]);
+        const data = JSON.parse(atob(token.split('.')[1]));
 
         authContext.signIn({ username, token, data });
       }
@@ -130,21 +134,23 @@ class App extends Component {
                   <h1>Vue générale</h1>
                 </Route>
 
-                <Route path='/events/'>
+                <Route path='/events'>
                   <h1>Events</h1>
                 </Route>
 
-                <Route path='/personnages/'>
+                <Route path='/personnages'>
                   <h1>Personnages</h1>
                 </Route>
 
-                <Route path='/lieux/'>
+                <Route path='/lieux'>
                   <h1>Lieux</h1>
                 </Route>
 
-                <Route path='/compte/'>
-                  <h1>Mon Compte</h1>
-                </Route>
+                <Route path='/compte' render={(props) => (
+                  <AccountComponent
+                    userStore={this.userStore}
+                  />
+                )} />
 
                 <Route>
                   <h1>404</h1>

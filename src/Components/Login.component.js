@@ -50,8 +50,9 @@ class LoginComponent extends Component {
 
     try {
       const token = await authStore.signIn({ username, password });
+      const data = JSON.parse(atob(token.split('.')[1]));
 
-      authContext.signIn({ username, token });
+      authContext.signIn({ username, token, data });
 
       try {
         localStorage.setItem('username', username);
