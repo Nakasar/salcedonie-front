@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import { withRouter } from "react-router";
 import Divider from "@material-ui/core/Divider";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -15,74 +16,80 @@ const styles = theme => ({
   toolbar: theme.mixins.toolbar,
   link: {
     textDecoration: 'none',
-  }
+  },
+  linkActive: {
+    color: 'blue !important',
+  },
 });
 
 class SideMenu extends Component {
   render() {
-    const { classes, authContext } = this.props;
+    const { classes, authContext, match, history, location: { pathname } } = this.props;
+    const activeLink = pathname.split('/')[1];
+
+    console.log(activeLink);
 
     return (
       <>
         <div className={classes.toolbar} />
         <Divider />
         <List>
-          <Link to='/' className={classes.link}>
-            <ListItem button key='Accueil'>
+          <NavLink to='/' className={classes.link}>
+            <ListItem button key='Accueil' selected={activeLink === ''}>
               <ListItemIcon><Home /></ListItemIcon>
               <ListItemText primary='Accueil' />
             </ListItem>
-          </Link>
-          <Link to='/general' className={classes.link}>
-            <ListItem button key='Résumé'>
+          </NavLink>
+          <NavLink to='/general' className={classes.link}>
+            <ListItem button key='Résumé' selected={activeLink === 'general'}>
               <ListItemIcon><Announcement /></ListItemIcon>
               <ListItemText primary='Résumé' />
             </ListItem>
-          </Link>
-          <Link to='/regles' className={classes.link}>
-            <ListItem button key='Règles'>
+          </NavLink>
+          <NavLink to='/regles' className={classes.link}>
+            <ListItem button key='Règles' selected={activeLink === 'regles'}>
               <ListItemIcon><LibraryBooks /></ListItemIcon>
               <ListItemText primary='Règles' />
             </ListItem>
-          </Link>
+          </NavLink>
           {authContext.user.data.is_admin &&
-            <Link to='/admin' className={classes.link}>
-              <ListItem button key='Administration'>
+            <NavLink to='/admin' className={classes.link}>
+              <ListItem button key='Administration' selected={activeLink === 'admin'}>
                 <ListItemIcon><Settings/></ListItemIcon>
                 <ListItemText primary='Administration'/>
               </ListItem>
-            </Link>
+            </NavLink>
           }
         </List>
         <Divider />
         <List>
-          <Link to='/events' className={classes.link}>
-            <ListItem button key='Events'>
+          <NavLink to='/events' className={classes.link} activeClassName={classes.linkActive}>
+            <ListItem button key='Events' selected={activeLink === 'events'}>
               <ListItemIcon><Event /></ListItemIcon>
               <ListItemText primary='Events' />
             </ListItem>
-          </Link>
-          <Link to='/personnages' className={classes.link}>
-            <ListItem button key='Personnages'>
+          </NavLink>
+          <NavLink to='/personnages' className={classes.link} activeClassName={classes.linkActive}>
+            <ListItem button key='Personnages' selected={activeLink === 'personnages'}>
               <ListItemIcon><SupervisorAccount /></ListItemIcon>
               <ListItemText primary='Personnages' />
             </ListItem>
-          </Link>
-          <Link to='/lieux' className={classes.link}>
-            <ListItem button key='Lieux'>
+          </NavLink>
+          <NavLink to='/lieux' className={classes.link} activeClassName={classes.linkActive}>
+            <ListItem button key='Lieux' selected={activeLink === 'lieux'}>
               <ListItemIcon><Store /></ListItemIcon>
               <ListItemText primary='Lieux' />
             </ListItem>
-          </Link>
+          </NavLink>
         </List>
         <Divider />
         <List>
-          <Link to='/compte' className={classes.link}>
-            <ListItem button key='Mon Compte'>
+          <NavLink to='/compte' className={classes.link} activeClassName={classes.linkActive}>
+            <ListItem button key='Mon Compte' selected={activeLink === 'compte'}>
               <ListItemIcon><AccountCircle /></ListItemIcon>
               <ListItemText primary='Mon Compte' />
             </ListItem>
-          </Link>
+          </NavLink>
           <ListItem button key='Déconnexion' onClick={authContext.logOut}>
             <ListItemIcon><ExitToApp /></ListItemIcon>
             <ListItemText primary='Déconnexion' />
@@ -98,4 +105,4 @@ SideMenu.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export default withAuthContext(withStyles(styles, { withTheme: true })(SideMenu));
+export default withRouter(withAuthContext(withStyles(styles, { withTheme: true })(SideMenu)));
