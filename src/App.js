@@ -9,6 +9,7 @@ import withAuthContext from './Contexts/Auth/withAuthContext.context';
 
 import AppBar from './Components/AppBar.component';
 import SideMenu from "./Components/SideMenu.component";
+import LoginComponent from "./Components/Login.component";
 
 const drawerWidth = 240;
 
@@ -49,7 +50,7 @@ class App extends Component {
 
     if (!authContext.user) {
       return (
-        <h1>Vous devez être connecté</h1>
+        <LoginComponent/>
       );
     }
 
