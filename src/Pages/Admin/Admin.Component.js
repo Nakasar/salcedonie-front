@@ -15,6 +15,8 @@ import TableBody from "@material-ui/core/es/TableBody/TableBody";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 
+import AddUserDialog from './AddUser.Dialog';
+
 const styles = theme => ({
   card: {
     minWidth: 275,
@@ -25,6 +27,7 @@ class AdminComponent extends Component {
   state = {
     loading: true,
     users: [],
+    addUserDialog: false,
   };
 
   async componentDidMount() {
@@ -37,10 +40,24 @@ class AdminComponent extends Component {
     });
   }
 
+  handleOpenAddUserDialog = () => {
+    this.setState({ addUserDialog: true });
+  };
+
+  handleCloseAddUserDialog = () => {
+    this.setState({ addUserDialog: false });
+  };
+
+  createUser = async ({ username, discord_id, password }) => {
+    const { userStore, authContext: { user } } = this.props;
+
+    await userStore.createUser({ username, discord_id, password }, { token: user.token });
+  };
+
   render() {
     const { classes } = this.props;
 
-    const { loading, users } = this.state;
+    const { loading, users, addUserDialog } = this.state;
 
     if (loading) {
       return (
@@ -51,6 +68,7 @@ class AdminComponent extends Component {
 
     return (
       <>
+        <AddUserDialog open={addUserDialog} handleClose={this.handleCloseAddUserDialog} createUser={this.createUser} />
         <Card>
           <CardContent>
             <Grid container justify="space-between" spacing={16}>
@@ -60,7 +78,7 @@ class AdminComponent extends Component {
                 </Typography>
               </Grid>
               <Grid item>
-                <Button variant="contained" color="primary" className={classes.button}>
+                <Button variant="contained" color="primary" className={classes.button} onClick={this.handleOpenAddUserDialog}>
                   Ajouter
                   <Add />
                 </Button>
