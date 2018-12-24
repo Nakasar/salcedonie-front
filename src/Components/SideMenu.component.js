@@ -7,7 +7,9 @@ import ListItemText from "@material-ui/core/ListItemText";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import { withStyles } from '@material-ui/core/styles';
-import { AccountCircle, Announcement, Event, Home, Store, SupervisorAccount } from '@material-ui/icons';
+import { AccountCircle, Announcement, Event, ExitToApp, Home, LibraryBooks, Settings, Store, SupervisorAccount } from '@material-ui/icons';
+
+import withAuthContext from '../Contexts/Auth/withAuthContext.context';
 
 const styles = theme => ({
   toolbar: theme.mixins.toolbar,
@@ -18,7 +20,7 @@ const styles = theme => ({
 
 class SideMenu extends Component {
   render() {
-    const { classes } = this.props;
+    const { classes, authContext } = this.props;
 
     return (
       <>
@@ -35,6 +37,18 @@ class SideMenu extends Component {
             <ListItem button key='Résumé'>
               <ListItemIcon><Announcement /></ListItemIcon>
               <ListItemText primary='Résumé' />
+            </ListItem>
+          </Link>
+          <Link to='/regles' className={classes.link}>
+            <ListItem button key='Règles'>
+              <ListItemIcon><LibraryBooks /></ListItemIcon>
+              <ListItemText primary='Règles' />
+            </ListItem>
+          </Link>
+          <Link to='/regles' className={classes.link}>
+            <ListItem button key='Administration'>
+              <ListItemIcon><Settings /></ListItemIcon>
+              <ListItemText primary='Administration' />
             </ListItem>
           </Link>
         </List>
@@ -67,6 +81,10 @@ class SideMenu extends Component {
               <ListItemText primary='Mon Compte' />
             </ListItem>
           </Link>
+          <ListItem button key='Déconnexion' onClick={authContext.logOut}>
+            <ListItemIcon><ExitToApp /></ListItemIcon>
+            <ListItemText primary='Déconnexion' />
+          </ListItem>
         </List>
       </>
     );
@@ -78,4 +96,4 @@ SideMenu.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(SideMenu);
+export default withAuthContext(withStyles(styles, { withTheme: true })(SideMenu));

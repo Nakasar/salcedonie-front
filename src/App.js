@@ -11,6 +11,8 @@ import AppBar from './Components/AppBar.component';
 import SideMenu from "./Components/SideMenu.component";
 import LoginComponent from "./Components/Login.component";
 
+import AuthStore from './Stores/Auth.store';
+
 const drawerWidth = 240;
 
 const styles = theme => ({
@@ -34,12 +36,34 @@ const styles = theme => ({
 });
 
 class App extends Component {
+  authStore = new AuthStore();
+
   constructor(props) {
     super(props);
     this.state = {
       mobileOpen: false,
+      loading: true,
     };
   }
+
+  componentDidMount() {
+    const { authContext } = this.props;
+
+    try {
+      const username = localStorage.getItem('username');
+      const token = localStorage.getItem('token');
+
+      if (username && token) {
+        const data = atob(token.split('.')[1]);
+
+        authContext.signIn({ username, token, data });
+      }
+    } catch (err) {
+      console.log('No credentials found.');
+    }
+
+    this.setState({ loading: false });
+  };
 
   handleDrawerToggle = () => {
     this.setState(state => ({ mobileOpen: !state.mobileOpen }));
@@ -47,10 +71,17 @@ class App extends Component {
 
   render() {
     const { classes, theme, authContext } = this.props;
+    const { loading } = this.state;
+
+    if (loading) {
+      return (
+        <div>Loading...</div>
+      );
+    }
 
     if (!authContext.user) {
       return (
-        <LoginComponent/>
+        <LoginComponent authStore={this.authStore} />
       );
     }
 
@@ -113,6 +144,10 @@ class App extends Component {
 
                 <Route path='/compte/'>
                   <h1>Mon Compte</h1>
+                </Route>
+
+                <Route>
+                  <h1>404</h1>
                 </Route>
               </Switch>
             </main>

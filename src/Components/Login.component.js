@@ -8,6 +8,8 @@ import Typography from '@material-ui/core/Typography';
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 
+import withAuthContext from '../Contexts/Auth/withAuthContext.context';
+
 import Background from '../resources/images/salcedonie.background.png';
 
 const styles = theme => ({
@@ -31,6 +33,37 @@ class LoginComponent extends Component {
     });
   };
 
+  signIn = async (event) => {
+    event.preventDefault();
+
+    const { authStore, authContext } = this.props;
+    const { username, password } = this.state;
+
+    if (!username) {
+      console.error('Username is required');
+      return;
+    }
+    if (!password) {
+      console.error('Password is required');
+      return;
+    }
+
+    try {
+      const token = await authStore.signIn({ username, password });
+
+      authContext.signIn({ username, token });
+
+      try {
+        localStorage.setItem('username', username);
+        localStorage.setItem('token', token);
+      } catch (err) {
+        console.error('Could not save user session.');
+      }
+    } catch(err) {
+      console.error(err);
+    }
+  };
+
   render() {
     const { classes } = this.props;
     const { username, password } = this.state;
@@ -51,7 +84,7 @@ class LoginComponent extends Component {
                 <Typography variant="h5" component="h2">
                   Connexion
                 </Typography>
-                <form noValidate autoComplete="off">
+                <form id="signIn" onSubmit={this.signIn} noValidate autoComplete="off">
                   <TextField
                     id="outlined-username"
                     label="Nom d'utilisateur"
@@ -85,7 +118,7 @@ class LoginComponent extends Component {
                 </form>
               </CardContent>
               <CardActions>
-                <Button variant="contained" color="primary" className={classes.button}>
+                <Button variant="contained" color="primary" className={classes.button} form="signIn" type='submit'>
                   Se connecter
                 </Button>
               </CardActions>
@@ -97,4 +130,4 @@ class LoginComponent extends Component {
   }
 }
 
-export default withStyles(styles)(LoginComponent);
+export default withAuthContext(withStyles(styles)(LoginComponent));
