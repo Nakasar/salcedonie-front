@@ -24,7 +24,7 @@ const styles = theme => ({
 
 class SideMenu extends Component {
   render() {
-    const { classes, authContext, match, history, location: { pathname } } = this.props;
+    const { classes, authContext, location: { pathname } } = this.props;
     const activeLink = pathname.split('/')[1];
 
     console.log(activeLink);

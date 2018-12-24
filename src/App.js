@@ -14,6 +14,7 @@ import AccountComponent from './Pages/Account/Account.Component';
 
 import AuthStore from './Stores/Auth.store';
 import UserStore from './Stores/User.Store';
+import AdminComponent from "./Pages/Admin/Admin.Component";
 
 const drawerWidth = 240;
 const API_URL = 'http://localhost:5000';
@@ -133,6 +134,12 @@ class App extends Component {
                 <Route path='/general'>
                   <h1>Vue générale</h1>
                 </Route>
+
+                <Route path='/admin' render={(props) => (
+                  <AdminComponent
+                    userStore={this.userStore}
+                  />
+                )} />
 
                 <Route path='/events'>
                   <h1>Events</h1>

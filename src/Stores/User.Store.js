@@ -15,4 +15,15 @@ export default class UserStore {
     });
     return result.data;
   };
+
+  getUsers = async ({ discord_id }, { token }) => {
+    console.log(this.apiUrl);
+    const result = await axios({
+      method: 'GET',
+      baseURL: this.apiUrl,
+      url: `/users`,
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return result.data;
+  };
 };
