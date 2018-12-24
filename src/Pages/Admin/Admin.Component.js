@@ -61,6 +61,16 @@ class AdminComponent extends Component {
     await this.refreshUserList();
   };
 
+  renderUserActions = (user) => {
+    const { classes } = this.props;
+
+    return (
+      <>
+
+      </>
+    );
+  };
+
   render() {
     const { classes } = this.props;
 
@@ -104,7 +114,7 @@ class AdminComponent extends Component {
                   <TableRow key={user._id}>
                     <TableCell component="th" scope="row">{user.username} {user.admin && <AccountBalance />}</TableCell>
                     <TableCell align="right">{user.discord_id}</TableCell>
-                    <TableCell align="right"></TableCell>
+                    <TableCell align="right">{this.renderUserActions(user)}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
