@@ -11,10 +11,12 @@ import AppBar from './Components/AppBar.component';
 import SideMenu from "./Components/SideMenu.component";
 import LoginComponent from "./Components/Login.component";
 import AccountComponent from './Pages/Account/Account.Component';
+import EventsComponent from './Pages/Events/Events.Component';
+import AdminComponent from "./Pages/Admin/Admin.Component";
 
 import AuthStore from './Stores/Auth.store';
 import UserStore from './Stores/User.Store';
-import AdminComponent from "./Pages/Admin/Admin.Component";
+import EventStore from './Stores/Event.store';
 
 const drawerWidth = 240;
 const API_URL = 'http://localhost:5000';
@@ -42,6 +44,7 @@ const styles = theme => ({
 class App extends Component {
   authStore = new AuthStore({ apiUrl: API_URL });
   userStore = new UserStore({ apiUrl: API_URL });
+  eventStore = new EventStore({ apiUrl: API_URL });
 
   constructor(props) {
     super(props);
@@ -141,9 +144,12 @@ class App extends Component {
                   />
                 )} />
 
-                <Route path='/events'>
-                  <h1>Events</h1>
-                </Route>
+                <Route path='/events' render={({ match }) => (
+                  <EventsComponent
+                    match={match}
+                    eventStore={this.eventStore}
+                  />
+                )} />
 
                 <Route path='/personnages'>
                   <h1>Personnages</h1>
@@ -153,7 +159,7 @@ class App extends Component {
                   <h1>Lieux</h1>
                 </Route>
 
-                <Route path='/compte' render={(props) => (
+                <Route path='/compte' render={() => (
                   <AccountComponent
                     userStore={this.userStore}
                   />
