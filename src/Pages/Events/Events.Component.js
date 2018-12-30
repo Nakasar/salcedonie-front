@@ -7,12 +7,15 @@ import withAuthContext from '../../Contexts/Auth/withAuthContext.context';
 import CardContent from "@material-ui/core/es/CardContent/CardContent";
 import Grid from "@material-ui/core/Grid";
 import CardHeader from "@material-ui/core/CardHeader";
-import IconButton from "@material-ui/core/IconButton";
 import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
 import {Link, Route} from "react-router-dom";
 
+import { Add } from "@material-ui/icons";
+
 import EventDetails from "./EventDetails.Component";
+import Fab from "@material-ui/core/Fab";
+import Tooltip from "@material-ui/core/es/Tooltip/Tooltip";
 
 const styles = theme => ({
   card: {
@@ -24,7 +27,12 @@ const styles = theme => ({
   },
   link: {
     textDecoration: 'none',
-  }
+  },
+  fab: {
+    position: 'absolute',
+    bottom: theme.spacing.unit * 2,
+    right: theme.spacing.unit * 2,
+  },
 });
 
 class EventsComponent extends Component {
@@ -33,8 +41,10 @@ class EventsComponent extends Component {
     loading: true,
   };
 
-  async componentDidMount() {
-    await this.refreshEvents();
+  componentDidMount() {
+    this.refreshEvents().then(() => {
+      this.setState({ loading: false });
+    });
   }
 
   async refreshEvents() {
@@ -44,7 +54,6 @@ class EventsComponent extends Component {
 
     this.setState({
       events,
-      loading: false,
     });
   }
 
@@ -69,40 +78,47 @@ class EventsComponent extends Component {
           exact
           path={match.path}
           render={() => (
-            <Grid container spacing={24}>
-              <Grid>
-                <Grid item>
-                  <Typography variant="h5" component="h2">
-                    Evènements
-                  </Typography>
+            <>
+              <Grid container spacing={24}>
+                <Grid>
+                  <Grid item>
+                    <Typography variant="h5" component="h2">
+                      Evènements
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid container spacing={24}>
+                  {events.map(event => (
+                    <Grid item xs>
+                      <Card>
+                        <CardHeader
+                          title={event.title}
+                        />
+                        <CardContent>
+                          <Typography component="p">
+                            {event.description}
+                          </Typography>
+                          <hr/>
+                          <Typography component="p">
+                            {event.text}
+                          </Typography>
+                        </CardContent>
+                        <CardActions>
+                          <Link to={`/events/${event._id}`} className={classes.link}>
+                            <Button size="small" color='primary'>Timeline</Button>
+                          </Link>
+                        </CardActions>
+                      </Card>
+                    </Grid>
+                  ))}
                 </Grid>
               </Grid>
-              <Grid container spacing={24}>
-                {events.map(event => (
-                  <Grid item xs>
-                    <Card>
-                      <CardHeader
-                        title={event.title}
-                      />
-                      <CardContent>
-                        <Typography component="p">
-                          {event.description}
-                        </Typography>
-                        <hr/>
-                        <Typography component="p">
-                          {event.text}
-                        </Typography>
-                      </CardContent>
-                      <CardActions>
-                        <Link to={`/events/${event._id}`} className={classes.link}>
-                          <Button size="small" color='primary'>Timeline</Button>
-                        </Link>
-                      </CardActions>
-                    </Card>
-                  </Grid>
-                ))}
-              </Grid>
-            </Grid>
+              <Tooltip title="Nouvel Evènement" placement="left" aria-label="Add">
+                <Fab color="primary" aria-label="Add" className={classes.fab}>
+                  <Add />
+                </Fab>
+              </Tooltip>
+            </>
           )}
         />
       </>

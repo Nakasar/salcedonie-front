@@ -1,18 +1,16 @@
 import React, {Component} from 'react';
-import Card from "@material-ui/core/es/Card/Card";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from '@material-ui/core/styles';
 
 import withAuthContext from '../../Contexts/Auth/withAuthContext.context';
-import CardContent from "@material-ui/core/es/CardContent/CardContent";
 import Grid from "@material-ui/core/Grid";
-import CardHeader from "@material-ui/core/CardHeader";
-import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
 import { Link } from "react-router-dom";
 
-import { NavigateBefore } from "@material-ui/icons";
+import { EventAvailable, EventBusy, NavigateBefore } from "@material-ui/icons";
 import Paper from "@material-ui/core/es/Paper/Paper";
+import Tooltip from "@material-ui/core/Tooltip";
+import NewEventForm from "./NewEvent.Form";
 
 const styles = theme => ({
   card: {
@@ -26,7 +24,8 @@ const styles = theme => ({
     textDecoration: 'none',
   },
   paper: {
-    padding: '10px',
+    padding: theme.spacing.unit,
+    margin: theme.spacing.unit,
   },
 });
 
@@ -36,20 +35,25 @@ class EventDetailsComponent extends Component {
     loading: true,
   };
 
-  async componentDidMount() {
-    await this.refreshEvent();
+  componentDidMount() {
+    this.refreshEvent().then(() => {
+      this.setState({ loading: false });
+    });
   }
 
-  async refreshEvent() {
+  refreshEvent = async () => {
     const { authContext: { user }, eventStore, eventId } = this.props;
 
     const event = await eventStore.getEvent({ id: eventId }, { token: user.token });
 
     this.setState({
       event,
-      loading: false,
     });
-  }
+  };
+
+  createEvent = async (event) => {
+    console.log(event);
+  };
 
   render() {
     const { classes } = this.props;
@@ -69,9 +73,11 @@ class EventDetailsComponent extends Component {
           <Grid container direction="row" alignItems="center">
             <Grid item>
               <Link to={'/events'}>
-                <Button color="primary" className={classes.button}>
-                  <NavigateBefore />
-                </Button>
+                <Tooltip title="Retour" placement="left">
+                  <Button color="primary" className={classes.button}>
+                    <NavigateBefore />
+                  </Button>
+                </Tooltip>
               </Link>
             </Grid>
             <Grid item>
@@ -79,14 +85,36 @@ class EventDetailsComponent extends Component {
                 {event.title}
               </Typography>
             </Grid>
+            <Grid item style={{ marginLeft: '10px' }}>
+              {event.archive ?
+                <Tooltip title="Archivé" placement="right">
+                  <EventBusy style={{ color: 'red' }}/>
+                </Tooltip>
+                :
+                <Tooltip title="Actif" placement="right">
+                  <EventAvailable style={{ color: 'green' }}/>
+                </Tooltip>
+              }
+            </Grid>
           </Grid>
+
           <Typography variant="subtitle1">
             {event.description}
           </Typography>
+
           <Typography variant="body1">
             {event.text}
           </Typography>
-          <Paper>
+
+          <Paper className={classes.paper}>
+            <NewEventForm
+              createEvent={this.createEvent}
+              eventId={event._id}
+              eventTitle={event.title}
+            />
+          </Paper>
+
+          <Paper className={classes.paper}>
 
           </Paper>
         </Paper>
